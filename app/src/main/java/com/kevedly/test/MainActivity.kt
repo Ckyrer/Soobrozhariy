@@ -25,6 +25,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, RulesActivity::class.java))
         }
 
+        binding.button2.setOnClickListener {
+            finish()
+            startActivity(Intent(this, Game5Activity::class.java))
+        }
+
         binding.button5.setOnClickListener {
             finish()
         }
