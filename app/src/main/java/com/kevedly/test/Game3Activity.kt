@@ -1,12 +1,16 @@
 package com.kevedly.test
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import com.kevedly.test.databinding.ActivityGame3Binding
 import org.json.JSONArray
@@ -76,6 +80,7 @@ class Game3Activity : AppCompatActivity() {
         var votes: Int = 0
         var votesSum: Int = 0
         var markedPlayer: Int = 0
+        var repeat = false
 
         letters.shuffle()
         themes.shuffle()
@@ -83,24 +88,56 @@ class Game3Activity : AppCompatActivity() {
         // show theme
         binding.theme.setOnClickListener {
             if (themes.isNotEmpty()) {
-                binding.theme.text = themes[0]
-                themes.removeFirst()
-                binding.theme.isEnabled = false
-                binding.letter.isEnabled = true
+                binding.theme.text = ""
+                ObjectAnimator.ofFloat(
+                    binding.theme,
+                    View.ROTATION_X,
+                    0f, 360f
+                ).apply {
+                    duration = 700
+                    LinearInterpolator()
+                    addListener( doOnEnd {
+                        if (!repeat) {
+                            binding.theme.text = themes[0]
+                            themes.removeFirst()
+                            binding.theme.isEnabled = false
+                            binding.letter.isEnabled = true
+                            repeat = true
+                        } else {
+                            repeat = false
+                        }
+                    })
+                    start()
+                }
             } else {
-                println("Конец игры!")
+                val intent = Intent(this, GameOverActivity::class.java)
+                intent.putExtra("player", (playerscore.indexOf(playerscore.max())+1).toString())
+                finish()
+                startActivity(intent)
             }
         }
 
         // show letter
         binding.letter.setOnClickListener {
-            binding.letter.text = letters[0]
-            letters.add(letters[0])
-            letters.removeFirst()
-            binding.letter.isEnabled = false
-            binding.player1.isEnabled = true
-            binding.player2.isEnabled = true
-            binding.player3.isEnabled = true
+            binding.letter.text = ""
+            ObjectAnimator.ofFloat(
+                binding.letter,
+                View.ROTATION_X,
+                0f, 360f
+            ).apply {
+                duration = 700
+                LinearInterpolator()
+                addListener(doOnEnd {
+                    binding.letter.text = letters[0]
+                    letters.add(letters[0])
+                    letters.removeFirst()
+                    binding.letter.isEnabled = false
+                    binding.player1.isEnabled = true
+                    binding.player2.isEnabled = true
+                    binding.player3.isEnabled = true
+                })
+                start()
+            }
         }
 
         // exit
@@ -114,7 +151,7 @@ class Game3Activity : AppCompatActivity() {
                 it.isEnabled = false
                 if (number < 3) {votebuttons[number+3].isEnabled = false}
                 else {votebuttons[number-3].isEnabled = false}
-                if (agree) { votesSum ++ } else { votesSum -- }
+                if (agree) { votesSum ++ }
                 if (++votes==2) {
                     hideVoteButtons()
                     for (i in 0..5) {votebuttons[i].isEnabled = true}

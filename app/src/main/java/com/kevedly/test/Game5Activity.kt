@@ -1,12 +1,16 @@
 package com.kevedly.test
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import com.kevedly.test.databinding.ActivityGame3Binding
 import com.kevedly.test.databinding.ActivityGame5Binding
@@ -78,6 +82,7 @@ class Game5Activity : AppCompatActivity() {
         var votes: Int = 0
         var votesSum: Int = 0
         var markedPlayer: Int = 0
+        var repeat = false
 
         letters.shuffle()
         themes.shuffle()
@@ -85,10 +90,27 @@ class Game5Activity : AppCompatActivity() {
         // show theme
         binding.theme.setOnClickListener {
             if (themes.isNotEmpty()) {
-                binding.theme.text = themes[0]
-                themes.removeFirst()
-                binding.theme.isEnabled = false
-                binding.letter.isEnabled = true
+                binding.theme.text = ""
+                ObjectAnimator.ofFloat(
+                    binding.theme,
+                    View.ROTATION_X,
+                    0f, 360f
+                ).apply {
+                    duration = 700
+                    LinearInterpolator()
+                    addListener( doOnEnd {
+                        if (!repeat) {
+                            binding.theme.text = themes[0]
+                            themes.removeFirst()
+                            binding.theme.isEnabled = false
+                            binding.letter.isEnabled = true
+                            repeat = true
+                        } else {
+                            repeat = false
+                        }
+                    })
+                    start()
+                }
             } else {
                 val intent = Intent(this, GameOverActivity::class.java)
                 intent.putExtra("player", (playerscore.indexOf(playerscore.max())+1).toString())
@@ -99,15 +121,27 @@ class Game5Activity : AppCompatActivity() {
 
         // show letter
         binding.letter.setOnClickListener {
-            binding.letter.text = letters[0]
-            letters.add(letters[0])
-            letters.removeFirst()
-            binding.letter.isEnabled = false
-            binding.player1.isEnabled = true
-            binding.player2.isEnabled = true
-            binding.player3.isEnabled = true
-            binding.player4.isEnabled = true
-            binding.player5.isEnabled = true
+            binding.letter.text = ""
+            ObjectAnimator.ofFloat(
+                binding.letter,
+                View.ROTATION_X,
+                0f, 360f
+            ).apply {
+                duration = 700
+                LinearInterpolator()
+                addListener(doOnEnd {
+                    binding.letter.text = letters[0]
+                    letters.add(letters[0])
+                    letters.removeFirst()
+                    binding.letter.isEnabled = false
+                    binding.player1.isEnabled = true
+                    binding.player2.isEnabled = true
+                    binding.player3.isEnabled = true
+                    binding.player4.isEnabled = true
+                    binding.player5.isEnabled = true
+                })
+                start()
+            }
         }
 
         // exit
@@ -121,11 +155,11 @@ class Game5Activity : AppCompatActivity() {
                 it.isEnabled = false
                 if (number < 5) {votebuttons[number+5].isEnabled = false}
                 else {votebuttons[number-5].isEnabled = false}
-                if (agree) { votesSum ++ } else { votesSum -- }
-                if (++votes==3) {
+                if (agree) { votesSum ++ }
+                if (++votes==4) {
                     hideVoteButtons()
                     for (i in 0..9) {votebuttons[i].isEnabled = true}
-                    if (votesSum == 3) {
+                    if (votesSum >= 3) {
                         playerscore[markedPlayer] += 1
                         playerlabels[markedPlayer].text = playerscore[markedPlayer].toString()
                         speaker = false

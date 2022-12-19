@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/lines_fon"
     tools:context=".RulesActivity">
 
     <Button
@@ -23,8 +24,10 @@
         android:layout_height="636dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_button">
+        app:layout_constraintTop_toBottomOf="@+id/back_button"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,8 +37,60 @@
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
+                android:layout_height="135dp"
+                android:background="#3B000000"
+                android:text="Правила игры в Соображарий"
+                android:textColor="#F3BB67"
+                android:textSize="48sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="#3B000000"
+                android:text="Сначала игрокам даётся 2 &quot;колоды&quot; карт. На одной написаны категории, а на другой буквы."
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                android:background="#3B000000"
+                android:text="Игроки &quot;переварачивают&quot; по одной карте из каждой колоды."
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="#3B000000"
+                android:text="Когда все раскрыто, нужно быстро вспомнить слово подходящее данной букве и категории и нажать на кнопку, где указан номер этого игрока. После чего ввести слово в специальное поле в центре экрана."
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:background="#3B000000"
+                android:text="Далее игроки голосуют подходит ли слово к указанным букве и категории. Если было введено правильное слово, этот игрок зарабытывает 1 балл."
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="#3B000000"
+                android:text="Игроки сами решают когда закончить игру. В конце побеждает тот, кто наберёт болше всего баллов!"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:background="#3B000000"
+                android:text="Удачи в игре!!!"
+                android:textColor="#DA004F"
+                android:textSize="48sp" />
         </LinearLayout>
     </ScrollView>
 
